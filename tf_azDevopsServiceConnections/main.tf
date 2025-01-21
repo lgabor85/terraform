@@ -13,6 +13,6 @@ resource "azuredevops_serviceendpoint_azurerm" "example" {
 }
 
 resource "azuredevops_project" "project" {
-  name       = "example-project"
+  name       = "topdemo"
   visibility = "private"
 }
