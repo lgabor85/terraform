@@ -1,13 +1,13 @@
 # create subscription based on billing account data
 resource "azurerm_subscription" "subscription" {
-  subscription_name = format("TOPdeskSAAS-%s-%s", upper(var.site_stage_code), upper(var.site_name))
+  subscription_name = format("lgaborSub-%s-%s", upper(var.site_stage_code), upper(var.site_name))
   billing_scope_id  = data.azurerm_billing_mca_account_scope.mca_account_scope.id
   workload          = var.workload
 }
 
 # create azure ad application
 resource "azuread_application" "site_azuread_application" {
-  display_name = format("TOPdeskSAAS-%s-%s", upper(var.site_stage_code), upper(var.site_name))
+  display_name = format("lagaborSAAS-%s-%s", upper(var.site_stage_code), upper(var.site_name))
   owners       = [data.azuread_client_config.current.object_id]
 }
 
