@@ -13,7 +13,7 @@ terraform {
 
 provider "azuredevops" {
   org_service_url       = "https://dev.azure.com/lgaborDemoOrg"
-  personal_access_token = "$env:AZURE_DEVOPS_PAT"
+  personal_access_token = "$ARM_AZURE_DEVOPS_PAT"
 }
 
 provider "azurerm" {
