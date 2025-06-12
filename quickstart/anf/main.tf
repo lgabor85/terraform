@@ -58,7 +58,7 @@ resource "azurerm_netapp_pool" "pool" {
   resource_group_name = azurerm_resource_group.rg.name
   account_name        = azurerm_netapp_account.account.name
   location            = azurerm_resource_group.rg.location
-  service_level       = "Premium"
+  service_level       = "Standard"
   size_in_tb          = 4
 }
 
@@ -71,7 +71,7 @@ resource "azurerm_netapp_volume" "volume" {
   location            = azurerm_resource_group.rg.location
   volume_path         = "volume-${random_string.name.result}"
   protocols           = ["NFSv4.1"]
-  service_level       = "Premium"
+  service_level       = "Standard"
   subnet_id           = azurerm_subnet.subnet.id
   storage_quota_in_gb = 100
   export_policy_rule {
