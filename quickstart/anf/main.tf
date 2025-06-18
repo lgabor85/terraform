@@ -46,14 +46,14 @@ resource "azurerm_subnet" "subnet" {
 }
 
 # Create NetApp Account
-resource "azurerm_netapp_account" "account" {
+resource "azurerm_netapp_account" "anf-account" {
   name                = "account-${random_string.name.result}"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
 }
 
 # Create NetApp Pool
-resource "azurerm_netapp_pool" "pool" {
+resource "azurerm_netapp_pool" "anf-pool" {
   name                = "pool-${random_string.name.result}"
   resource_group_name = azurerm_resource_group.rg.name
   account_name        = azurerm_netapp_account.account.name
@@ -63,7 +63,7 @@ resource "azurerm_netapp_pool" "pool" {
 }
 
 # Create NetApp Volume
-resource "azurerm_netapp_volume" "volume" {
+resource "azurerm_netapp_volume" "anf-volume" {
   name                = "volume-${random_string.name.result}"
   resource_group_name = azurerm_resource_group.rg.name
   account_name        = azurerm_netapp_account.account.name
@@ -80,5 +80,20 @@ resource "azurerm_netapp_volume" "volume" {
     protocols_enabled = ["NFSv4.1"]
     unix_read_only    = false
     unix_read_write   = true
+  }
+}
+
+# Create NetApp Snapshot Policy
+resource "azurerm_netapp_snapshot_policy" "anf-snapshot-policy" {
+  name                = "snapshot-policy-${random_string.name.result}"
+  resource_group_name = azurerm_resource_group.rg.name
+  account_name        = azurerm_netapp_account.account.name
+  location            = azurerm_resource_group.rg.location
+  enabled             = true
+
+  daily_schedule {
+    snapshots_to_keep = var.anf-snapshots_to_keep
+    hour              = var.anf_snapshot_hour
+    minute            = var.anf_snapshot_minute
   }
 }
