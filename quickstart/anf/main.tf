@@ -97,3 +97,24 @@ resource "azurerm_netapp_snapshot_policy" "anf-snapshot-policy" {
     minute            = var.anf_snapshot_minute
   }
 }
+
+# Create NetApp Backup Vault
+resource "azurerm_netapp_backup_vault" "anf-backup-vault" {
+  name                = "backup-vault-${random_string.name.result}"
+  resource_group_name = azurerm_resource_group.anf-rg.name
+  account_name        = azurerm_netapp_account.anf-account.name
+  location            = azurerm_resource_group.anf-rg.location
+}
+
+# Create NetApp Backup Policy
+resource "azurerm_netapp_backup_policy" "anf-backup-policy" {
+  name                = "backup-policy-${random_string.name.result}"
+  resource_group_name = azurerm_resource_group.anf-rg.name
+  account_name        = azurerm_netapp_account.anf-account.name
+  location            = azurerm_resource_group.anf-rg.location
+  enabled             = true
+
+  daily_backups_to_keep   = var.anf_backup_daily
+  weekly_backups_to_keep  = var.anf_backup_weekly
+  monthly_backups_to_keep = var.anf_backup_monthly
+}

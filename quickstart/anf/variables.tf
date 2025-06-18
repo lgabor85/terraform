@@ -12,7 +12,7 @@ variable "resource_group_name_prefix" {
 
 variable "prevent_volume_destruction" {
   type        = bool
-  default     = true
+  default     = false
   description = "Should an `azurerm_netapp_volume` be protected against deletion (intentionally or unintentionally)? Defaults to `true`."
 }
 
@@ -32,4 +32,22 @@ variable "anf_snapshot_minute" {
   type        = number
   default     = 00
   description = "Minute of the hour to take snapshots for the NetApp volume."
+}
+
+variable "anf_backup_daily" {
+  type        = number
+  default     = 5
+  description = "Number of daily backups to keep for the NetApp volume."
+}
+
+variable "anf_backup_weekly" {
+  type        = number
+  default     = 0
+  description = "Number of weekly backups to keep for the NetApp volume."
+}
+
+variable "anf_backup_monthly" {
+  type        = number
+  default     = 0
+  description = "Number of monthly backups to keep for the NetApp volume."
 }
