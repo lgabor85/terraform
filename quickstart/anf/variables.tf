@@ -15,3 +15,21 @@ variable "prevent_volume_destruction" {
   default     = true
   description = "Should an `azurerm_netapp_volume` be protected against deletion (intentionally or unintentionally)? Defaults to `true`."
 }
+
+variable "anf-snapshots_to_keep" {
+  type        = number
+  default     = 10
+  description = "Number of snapshots to keep for the NetApp volume."
+}
+
+variable "anf_snapshot_hour" {
+  type        = number
+  default     = 00
+  description = "Hour of the day to take snapshots for the NetApp volume."
+}
+
+variable "anf_snapshot_minute" {
+  type        = number
+  default     = 00
+  description = "Minute of the hour to take snapshots for the NetApp volume."
+}
