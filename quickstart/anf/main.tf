@@ -22,15 +22,15 @@ resource "random_string" "name" {
 resource "azurerm_virtual_network" "anf-vnet" {
   name                = "vnet-${random_string.name.result}"
   address_space       = ["10.0.0.0/16"]
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.anf-rg.location
+  resource_group_name = azurerm_resource_group.anf-rg.name
 }
 
 # Create Subnet for NetApp
 resource "azurerm_subnet" "anf-subnet" {
   name                 = "subnet-${random_string.name.result}"
-  resource_group_name  = azurerm_resource_group.rg.name
-  virtual_network_name = azurerm_virtual_network.vnet.name
+  resource_group_name  = azurerm_resource_group.anf-rg.name
+  virtual_network_name = azurerm_virtual_network.anf-vnet.name
   address_prefixes     = ["10.0.0.0/24"]
   delegation {
     name = "delegation"
@@ -48,16 +48,16 @@ resource "azurerm_subnet" "anf-subnet" {
 # Create NetApp Account
 resource "azurerm_netapp_account" "anf-account" {
   name                = "account-${random_string.name.result}"
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.anf-rg.name
+  location            = azurerm_resource_group.anf-rg.location
 }
 
 # Create NetApp Pool
 resource "azurerm_netapp_pool" "anf-pool" {
   name                = "pool-${random_string.name.result}"
-  resource_group_name = azurerm_resource_group.rg.name
-  account_name        = azurerm_netapp_account.account.name
-  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.anf-rg.name
+  account_name        = azurerm_netapp_account.anf-account.name
+  location            = azurerm_resource_group.anf-rg.location
   service_level       = "Standard"
   size_in_tb          = 4
 }
@@ -65,10 +65,10 @@ resource "azurerm_netapp_pool" "anf-pool" {
 # Create NetApp Volume
 resource "azurerm_netapp_volume" "anf-volume" {
   name                = "volume-${random_string.name.result}"
-  resource_group_name = azurerm_resource_group.rg.name
-  account_name        = azurerm_netapp_account.account.name
-  pool_name           = azurerm_netapp_pool.pool.name
-  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.anf-rg.name
+  account_name        = azurerm_netapp_account.anf-account.name
+  pool_name           = azurerm_netapp_pool.anf-pool.name
+  location            = azurerm_resource_group.anf-rg.location
   volume_path         = "volume-${random_string.name.result}"
   protocols           = ["NFSv4.1"]
   service_level       = "Standard"
@@ -86,9 +86,9 @@ resource "azurerm_netapp_volume" "anf-volume" {
 # Create NetApp Snapshot Policy
 resource "azurerm_netapp_snapshot_policy" "anf-snapshot-policy" {
   name                = "snapshot-policy-${random_string.name.result}"
-  resource_group_name = azurerm_resource_group.rg.name
-  account_name        = azurerm_netapp_account.account.name
-  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.anf-rg.name
+  account_name        = azurerm_netapp_account.anf-account.name
+  location            = azurerm_resource_group.anf-rg.location
   enabled             = true
 
   daily_schedule {
