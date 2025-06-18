@@ -72,7 +72,7 @@ resource "azurerm_netapp_volume" "anf-volume" {
   volume_path         = "volume-${random_string.name.result}"
   protocols           = ["NFSv4.1"]
   service_level       = "Standard"
-  subnet_id           = azurerm_subnet.subnet.id
+  subnet_id           = azurerm_subnet.anf-subnet.id
   storage_quota_in_gb = 100
   export_policy_rule {
     rule_index        = 1
