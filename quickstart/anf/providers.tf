@@ -8,9 +8,6 @@ terraform {
       source  = "hashicorp/random"
       version = "~>3.0"
     }
-    azapi = {
-      source = "Azure/azapi"
-    }
   }
 }
 
@@ -22,8 +19,4 @@ provider "azurerm" {
       prevent_volume_destruction = var.prevent_volume_destruction
     }
   }
-}
-
-provider "azapi" {
-  skip_provider_registration = false
 }
