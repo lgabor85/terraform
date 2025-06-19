@@ -5,9 +5,9 @@
 # This module creates a backup policy for ANF volumes as a workaround for the current limitations in the AzureRM provider.
 # see: https://github.com/hashicorp/terraform-provider-azurerm/issues/29901
 module "backup_policy" {
-  source     = "./modules/backup_policy"
-  parent_id  = azurerm_netapp_account.anf-account.id
-  location   = azurerm_netapp_account.anf-account.location
+  source    = "./modules/backup_policy"
+  parent_id = azurerm_netapp_account.anf-account.id
+  location  = azurerm_netapp_account.anf-account.location
   properties = {
     enabled              = true
     dailyBackupsToKeep   = var.anf_backup_daily
