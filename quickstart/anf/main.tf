@@ -1,3 +1,24 @@
+
+# ─────────────────────────────────────────────────────────┐
+# Nested modules for Azure NetApp Files (ANF) backup policy|
+# ─────────────────────────────────────────────────────────┘
+# This module creates a backup policy for ANF volumes as a workaround for the current limitations in the AzureRM provider.
+# see: https://github.com/hashicorp/terraform-provider-azurerm/issues/29901
+module "backup_policy" {
+  source     = "./modules/backup_policy"
+  parent_id  = azurerm_netapp_account.anf-account.id
+  location   = azurerm_netapp_account.anf-account.location
+  properties = {
+    enabled              = true
+    dailyBackupsToKeep   = var.anf_backup_daily
+    weeklyBackupsToKeep  = var.anf_backup_weekly
+    monthlyBackupsToKeep = var.anf_backup_monthly
+  }
+}
+
+# ────────────────────────────────────────────────────────────────┐
+# Main resources to create Azure NetApp Files (ANF) infrastructure|
+# ────────────────────────────────────────────────────────────────┘
 # Create random pet name to ensure unique resource name
 resource "random_pet" "rg_name" {
   prefix = var.resource_group_name_prefix
@@ -81,6 +102,12 @@ resource "azurerm_netapp_volume" "anf-volume" {
     unix_read_only    = false
     unix_read_write   = true
   }
+  # Enabling backup policy
+  data_protection_backup_policy {
+    backup_vault_id  = azurerm_netapp_backup_vault.anf-backup-vault.id
+    backup_policy_id = module.backup_policy.policy_id
+    policy_enabled   = true
+  }
 }
 
 # Create NetApp Snapshot Policy
@@ -104,17 +131,4 @@ resource "azurerm_netapp_backup_vault" "anf-backup-vault" {
   resource_group_name = azurerm_resource_group.anf-rg.name
   account_name        = azurerm_netapp_account.anf-account.name
   location            = azurerm_resource_group.anf-rg.location
-}
-
-# Create NetApp Backup Policy
-resource "azurerm_netapp_backup_policy" "anf-backup-policy" {
-  name                = "backup-policy-${random_string.name.result}"
-  resource_group_name = azurerm_resource_group.anf-rg.name
-  account_name        = azurerm_netapp_account.anf-account.name
-  location            = azurerm_resource_group.anf-rg.location
-  enabled             = true
-
-  daily_backups_to_keep   = var.anf_backup_daily
-  weekly_backups_to_keep  = var.anf_backup_weekly
-  monthly_backups_to_keep = var.anf_backup_monthly
 }

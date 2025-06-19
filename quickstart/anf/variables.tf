@@ -51,3 +51,21 @@ variable "anf_backup_monthly" {
   default     = 0
   description = "Number of monthly backups to keep for the NetApp volume."
 }
+
+variable "anf_backup_daily" {
+  type = number
+  default = 5
+  description = "Number of daily backups to keep for the NetApp volume."
+}
+
+variable "anf_backup_weekly" {
+  type = number
+  default = 0
+  description = "Number of weekly backups to keep for the NetApp volume."
+}
+
+variable "anf_backup_monthly" {
+  type = number
+  default = 0
+  description = "Number of monthly backups to keep for the NetApp volume."
+}
