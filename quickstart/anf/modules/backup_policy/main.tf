@@ -4,12 +4,12 @@ resource "azapi_resource" "anf_daily_only_backup_policy" {
   name      = var.policy_name
   location  = var.location
 
-  body = jsonencode({
+  body = {
     properties = {
       enabled              = var.properties.enabled
       dailyBackupsToKeep   = var.properties.dailyBackupsToKeep
       weeklyBackupsToKeep  = var.properties.weeklyBackupsToKeep
       monthlyBackupsToKeep = var.properties.monthlyBackupsToKeep
     }
-  })
+  }
 }
