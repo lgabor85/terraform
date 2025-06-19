@@ -9,7 +9,7 @@ terraform {
       version = "~>3.0"
     }
     azapi = {
-      source  = "azure/azapi"
+      source  = "Azure/azapi"
     }
   }
 }
@@ -25,4 +25,5 @@ provider "azurerm" {
 }
 
 provider "azapi" {
+  skip_provider_registration = false
 }
