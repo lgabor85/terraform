@@ -22,7 +22,7 @@ module "anf_czr" {
   source_volume_id      = azurerm_netapp_volume.anf-volume.id
   destination_zone      = var.destination_zone
   replication_schedule  = var.replication_schedule
-  volume_path           = azurerm_netapp_volume.anf-volume.volume_path
+  volume_path           = "volume-${random_string.name.result}-replica"
   subnet_id             = azurerm_subnet.anf-subnet.id
   capacity_pool_id      = azurerm_netapp_pool.anf-pool.id
   service_level         = azurerm_netapp_pool.anf-pool.service_level
