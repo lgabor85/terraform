@@ -111,7 +111,7 @@ resource "azurerm_netapp_volume" "anf-volume" {
   zone                 = "1"  # Specify the Availability Zone (e.g., "1", "2", "3")
   storage_quota_in_gb = 100
   lifecycle {
-    ignore_changes = [ "*" ]
+    ignore_changes = all
     # prevent_destroy = true 
   }
   export_policy_rule {
