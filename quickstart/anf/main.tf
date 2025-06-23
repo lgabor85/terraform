@@ -111,7 +111,7 @@ resource "azurerm_netapp_volume" "anf-volume" {
   zone                 = "1"  # Specify the Availability Zone (e.g., "1", "2", "3")
   storage_quota_in_gb = 100
   lifecycle {
-    ignore_changes = [ data_protection ]             # Ignore replication changes managed by AzAPI:contentReference[oaicite:11]{index=11}
+    ignore_changes = [ all ]             # Ignore replication changes managed by AzAPI:contentReference[oaicite:11]{index=11}
     # prevent_destroy = true                           # Prevent destroying source volume accidentally:contentReference[oaicite:12]{index=12}
   }
   export_policy_rule {
