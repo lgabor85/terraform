@@ -51,3 +51,15 @@ variable "anf_backup_monthly" {
   default     = 0
   description = "Number of monthly backups to keep for the NetApp volume."
 }
+
+variable "replication_schedule" {
+  type        = string
+  default     = "hourly"
+  description = "Replication schedule for the NetApp volume. Options: '_10minutely', 'hourly', or 'daily'."
+}
+
+variable "destination_zone" {
+  type        = string
+  default     = "2"
+  description = "The target Availability Zone (e.g., '1', '2', '3') for the replica volume."
+}

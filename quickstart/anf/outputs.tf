@@ -13,3 +13,13 @@ output "netapp_pool_name" {
 output "netapp_volume_name" {
   value = azurerm_netapp_volume.anf-volume.name
 }
+
+output "replica_volume_id" {
+  description = "Resource ID of the created destination (replica) volume"
+  value       = module.anf_czr.destination_volume_id
+}
+
+output "replica_mirror_state" {
+  description = "Replication state of the destination volume (mirror status)"
+  value       = module.anf_czr.replication_status
+}
