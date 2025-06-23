@@ -26,7 +26,7 @@ module "anf_czr" {
   subnet_id             = azurerm_subnet.anf-subnet.id
   capacity_pool_id      = azurerm_netapp_pool.anf-pool.id
   service_level         = azurerm_netapp_pool.anf-pool.service_level
-  usage_threshold       = 1000
+  usage_threshold       = 100
   location              = azurerm_resource_group.anf-rg.location
 }
 
