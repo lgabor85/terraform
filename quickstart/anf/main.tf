@@ -18,16 +18,16 @@ module "backup_policy" {
 
 # This module sets up a Cross-Zone Replication (CZR) for Azure NetApp Files volumes.
 module "anf_czr" {
-  source                = "./modules/czr"
-  source_volume_id      = azurerm_netapp_volume.anf-volume.id
-  destination_zone      = var.destination_zone
-  replication_schedule  = var.replication_schedule
-  volume_path           = "volume-${random_string.name.result}-replica"
-  subnet_id             = azurerm_subnet.anf-subnet.id
-  capacity_pool_id      = azurerm_netapp_pool.anf-pool.id
-  service_level         = azurerm_netapp_pool.anf-pool.service_level
-  usage_threshold       = 2199023255552
-  location              = azurerm_resource_group.anf-rg.location
+  source               = "./modules/czr"
+  source_volume_id     = azurerm_netapp_volume.anf-volume.id
+  destination_zone     = var.destination_zone
+  replication_schedule = var.replication_schedule
+  volume_path          = "volume-${random_string.name.result}-replica"
+  subnet_id            = azurerm_subnet.anf-subnet.id
+  capacity_pool_id     = azurerm_netapp_pool.anf-pool.id
+  service_level        = azurerm_netapp_pool.anf-pool.service_level
+  usage_threshold      = 2199023255552
+  location             = azurerm_resource_group.anf-rg.location
 }
 
 # ────────────────────────────────────────────────────────────────┐
@@ -108,7 +108,7 @@ resource "azurerm_netapp_volume" "anf-volume" {
   protocols           = ["NFSv4.1"]
   service_level       = "Standard"
   subnet_id           = azurerm_subnet.anf-subnet.id
-  zone                 = "1"  # Specify the Availability Zone (e.g., "1", "2", "3")
+  zone                = "1" # Specify the Availability Zone (e.g., "1", "2", "3")
   storage_quota_in_gb = 100
   lifecycle {
     ignore_changes = all
