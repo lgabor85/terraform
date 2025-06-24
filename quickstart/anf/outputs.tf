@@ -10,10 +10,6 @@ output "netapp_pool_name" {
   value = azurerm_netapp_pool.anf-pool.name
 }
 
-output "netapp_volume_name" {
-  value = azurerm_netapp_volume.anf-volume.name
-}
-
 output "replica_volume_id" {
   description = "Resource ID of the created destination (replica) volume"
   value       = module.anf_czr.destination_volume_id

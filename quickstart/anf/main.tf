@@ -1,33 +1,32 @@
 
-# ─────────────────────────────────────────────────────────┐
-# Nested modules for Azure NetApp Files (ANF) backup policy|
-# ─────────────────────────────────────────────────────────┘
-# This module creates a backup policy for ANF volumes as a workaround for the current limitations in the AzureRM provider.
-# see: https://github.com/hashicorp/terraform-provider-azurerm/issues/29901
-module "backup_policy" {
-  source    = "./modules/backup_policy"
-  parent_id = azurerm_netapp_account.anf-account.id
-  location  = azurerm_netapp_account.anf-account.location
-  properties = {
-    enabled              = true
-    dailyBackupsToKeep   = var.anf_backup_daily
-    weeklyBackupsToKeep  = var.anf_backup_weekly
-    monthlyBackupsToKeep = var.anf_backup_monthly
-  }
-}
-
+# ───────────────────────────────────────────┐
+# Nested modules for Azure NetApp Files (ANF)|
+# ───────────────────────────────────────────┘
 # This module sets up a Cross-Zone Replication (CZR) for Azure NetApp Files volumes.
 module "anf_czr" {
-  source               = "./modules/czr"
-  source_volume_id     = azurerm_netapp_volume.anf-volume.id
-  destination_zone     = var.destination_zone
-  replication_schedule = var.replication_schedule
-  volume_path          = "volume-${random_string.name.result}-replica"
-  subnet_id            = azurerm_subnet.anf-subnet.id
-  capacity_pool_id     = azurerm_netapp_pool.anf-pool.id
-  service_level        = azurerm_netapp_pool.anf-pool.service_level
-  usage_threshold      = 2199023255552
-  location             = azurerm_resource_group.anf-rg.location
+  source              = "./modules/czr"
+  account_name        = azurerm_netapp_account.anf-account.name
+  account_id          = azurerm_netapp_account.anf-account.id
+  resource_group_name = azurerm_resource_group.anf-rg.name
+  capacity_pool_id    = azurerm_netapp_pool.anf-pool.id
+  pool_name           = azurerm_netapp_pool.anf-pool.name
+  location            = azurerm_resource_group.anf-rg.location
+  subnet_id           = azurerm_subnet.anf-subnet.id
+  usage_threshold     = 2199023255552
+  backup_vault_id     = azurerm_netapp_backup_vault.anf-backup-vault.id
+
+  # Required attributes
+  source_zone        = "1"
+  dest_zone          = "2" # Change as needed for your setup
+  source_volume_name = "volume-${random_string.name.result}-src"
+  dest_quota_gb      = 2199023255552
+
+  destination_volume_name = "volume-${random_string.name.result}-dest"
+  storage_quota_in_gb     = 100
+  volume_path             = "myvolume01"
+  service_level           = "Standard"
+  protocols               = ["NFSv4.1"]
+  # Add any other required variables for your module here
 }
 
 # ────────────────────────────────────────────────────────────────┐
@@ -95,53 +94,6 @@ resource "azurerm_netapp_pool" "anf-pool" {
   location            = azurerm_resource_group.anf-rg.location
   service_level       = "Standard"
   size_in_tb          = 4
-}
-
-# Create NetApp Volume
-resource "azurerm_netapp_volume" "anf-volume" {
-  name                = "volume-${random_string.name.result}"
-  resource_group_name = azurerm_resource_group.anf-rg.name
-  account_name        = azurerm_netapp_account.anf-account.name
-  pool_name           = azurerm_netapp_pool.anf-pool.name
-  location            = azurerm_resource_group.anf-rg.location
-  volume_path         = "volume-${random_string.name.result}"
-  protocols           = ["NFSv4.1"]
-  service_level       = "Standard"
-  subnet_id           = azurerm_subnet.anf-subnet.id
-  zone                = "1" # Specify the Availability Zone (e.g., "1", "2", "3")
-  storage_quota_in_gb = 2048 # Set the storage quota in GB
-  lifecycle {
-    ignore_changes = all
-    # prevent_destroy = true 
-  }
-  export_policy_rule {
-    rule_index        = 1
-    allowed_clients   = ["0.0.0.0/0"]
-    protocols_enabled = ["NFSv4.1"]
-    unix_read_only    = false
-    unix_read_write   = true
-  }
-  # Enabling backup policy
-  data_protection_backup_policy {
-    backup_vault_id  = azurerm_netapp_backup_vault.anf-backup-vault.id
-    backup_policy_id = module.backup_policy.policy_id
-    policy_enabled   = true
-  }
-}
-
-# Create NetApp Snapshot Policy
-resource "azurerm_netapp_snapshot_policy" "anf-snapshot-policy" {
-  name                = "snapshot-policy-${random_string.name.result}"
-  resource_group_name = azurerm_resource_group.anf-rg.name
-  account_name        = azurerm_netapp_account.anf-account.name
-  location            = azurerm_resource_group.anf-rg.location
-  enabled             = true
-
-  daily_schedule {
-    snapshots_to_keep = var.anf-snapshots_to_keep
-    hour              = var.anf_snapshot_hour
-    minute            = var.anf_snapshot_minute
-  }
 }
 
 # Create NetApp Backup Vault
