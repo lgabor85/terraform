@@ -109,7 +109,7 @@ resource "azurerm_netapp_volume" "anf-volume" {
   service_level       = "Standard"
   subnet_id           = azurerm_subnet.anf-subnet.id
   zone                = "1" # Specify the Availability Zone (e.g., "1", "2", "3")
-  storage_quota_in_gb = 100
+  storage_quota_in_gb = 2048 # Set the storage quota in GB
   lifecycle {
     ignore_changes = all
     # prevent_destroy = true 
