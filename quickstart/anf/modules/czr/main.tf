@@ -11,7 +11,7 @@ resource "azapi_resource" "anf_dest_volume" {
       serviceLevel   = var.service_level
       usageThreshold = var.usage_threshold # Quota in GiB
       subnetId       = var.subnet_id
-      volumeType     = "DataProtection" # Mark as DataProtection volume (required for replication destination):contentReference[oaicite:4]{index=4}:contentReference[oaicite:5]{index=5}
+      volumeType     = "DataProtection" # Mark as DataProtection volume (required for replication destination)
       dataProtection = {
         replication = {
           endpointType           = "dst"                    # This volume is the replication destination
