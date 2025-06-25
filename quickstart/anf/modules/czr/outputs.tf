@@ -9,7 +9,7 @@ output "destination_volume_id" {
 
 output "replication_status" {
   description = "Replication state of the destination volume (mirror status)"
-  value       = azapi_resource.dest.output.dest_properties.dataProtection.replication.mirrorState
+  value       = azapi_resource.dest.output.properties
   # The mirrorState can be 'Uninitialized', 'Mirrored', or 'Broken', etc., indicating replication health:contentReference[oaicite:9]{index=9}.
 }
 
