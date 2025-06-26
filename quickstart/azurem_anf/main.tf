@@ -59,6 +59,7 @@ resource "azurerm_netapp_volume" "example_primary" {
   protocols           = ["NFSv3"]
   subnet_id           = azurerm_subnet.example_primary.id
   storage_quota_in_gb = 100
+  zone                = "1"
 
   export_policy_rule {
     rule_index        = 1
@@ -79,13 +80,14 @@ resource "azurerm_netapp_volume" "example_secondary" {
   name                = "${var.prefix}-netappvolume-secondary"
   location            = var.alt_location
   resource_group_name = azurerm_resource_group.example.name
-  account_name        = azurerm_netapp_account.example_secondary.name
-  pool_name           = azurerm_netapp_pool.example_secondary.name
+  account_name        = azurerm_netapp_account.example_primary.name
+  pool_name           = azurerm_netapp_pool.example_primary.name
   volume_path         = "${var.prefix}-netappvolume-secondary"
   service_level       = "Standard"
   protocols           = ["NFSv3"]
-  subnet_id           = azurerm_subnet.example_secondary.id
+  subnet_id           = azurerm_subnet.example_primary.id
   storage_quota_in_gb = 100
+  zone                = "2"
 
   export_policy_rule {
     rule_index        = 1
