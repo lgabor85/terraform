@@ -44,9 +44,32 @@ resource "azurerm_netapp_pool" "example_primary" {
   size_in_tb          = 4
 }
 
+resource "azurerm_netapp_backup_vault" "anf_backup_vault" {
+  name                = "${var.prefix}-anf-backup-vault"
+  location            = azurerm_resource_group.example.location
+  resource_group_name = azurerm_resource_group.example.name
+  account_name        = azurerm_netapp_account.example_primary.name
+}
+
+resource "azurerm_netapp_backup_policy" "anf_backup_policy" {
+  name                = "${var.prefix}-anf-backup-policy"
+  location            = azurerm_resource_group.example.location
+  resource_group_name = azurerm_resource_group.example.name
+  account_name        = azurerm_netapp_account.example_primary.name
+
+  enabled                 = true
+  daily_backups_to_keep   = var.daily_backups_to_keep
+  weekly_backups_to_keep  = var.weekly_backups_to_keep
+  monthly_backups_to_keep = var.monthly_backups_to_keep
+
+}
+
+
+
+
 resource "azurerm_netapp_volume" "example_primary" {
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 
   name                = "${var.prefix}-netappvolume-primary"
@@ -68,11 +91,17 @@ resource "azurerm_netapp_volume" "example_primary" {
     unix_read_only    = false
     unix_read_write   = true
   }
+
+  data_protection_backup_policy {
+    backup_vault_id  = azurerm_netapp_backup_vault.anf_backup_vault.id
+    backup_policy_id = azurerm_netapp_backup_policy.anf_backup_policy.id
+    policy_enabled   = true
+  }
 }
 
 resource "azurerm_netapp_volume" "example_secondary" {
   lifecycle {
-    prevent_destroy = true
+    prevent_destroy = false
   }
 
   depends_on = [azurerm_netapp_volume.example_primary]

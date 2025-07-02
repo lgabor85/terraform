@@ -22,3 +22,21 @@ variable "prevent_volume_destruction" {
   default     = false
   description = "Should an `azurerm_netapp_volume` be protected against deletion (intentionally or unintentionally)? Defaults to `true`."
 }
+
+variable "daily_backups_to_keep" {
+  type        = number
+  default     = 35
+  description = "The number of daily backups to keep for the NetApp Volume. Defaults to `30`."
+}
+
+variable "weekly_backups_to_keep" {
+  type        = number
+  default     = 0
+  description = "The number of weekly backups to keep for the NetApp Volume. Defaults to `0`."
+}
+
+variable "monthly_backups_to_keep" {
+  type        = number
+  default     = 0
+  description = "The number of monthly backups to keep for the NetApp Volume. Defaults to `0`."
+}
